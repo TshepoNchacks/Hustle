@@ -1,0 +1,131 @@
+<div class="risk-container">
+    <h2 class="form-title">Project Risk Assessment Form</h2>
+  
+    <form [formGroup]="projectForm" (ngSubmit)="submitProjectForm()">
+      <!-- Risk Info -->
+      <div class="section">
+        <h3>Risk Details</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Project Risk Description</label>
+            <input type="text" formControlName="projectRiskDescription">
+          </div>
+          <div class="form-group">
+            <label>Root Causes</label>
+            <input type="text" formControlName="rootCauses">
+          </div>
+          <div class="form-group">
+            <label>Consequences</label>
+            <input type="text" formControlName="consequences">
+          </div>
+        </div>
+      </div>
+  
+      <!-- Inherent Risk -->
+      <div class="section">
+        <h3>Inherent Risk Rating</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Probability/Likelihood</label>
+            <select formControlName="inherentProbability">
+              <option *ngFor="let n of [1,2,3,4,5]" [value]="n">{{n}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Impact/Consequence</label>
+            <select formControlName="inherentImpact">
+              <option *ngFor="let n of [1,2,3,4,5]" [value]="n">{{n}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Overall Inherent Risk</label>
+            <input type="text" formControlName="inherentRisk" readonly>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Controls -->
+      <div class="section">
+        <h3>Existing Controls</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Existing Controls</label>
+            <input type="text" formControlName="existingControls">
+          </div>
+          <div class="form-group">
+            <label>Type of Control</label>
+            <select formControlName="controlType">
+              <option value="Preventive">Preventive</option>
+              <option value="Detective">Detective</option>
+              <option value="Corrective">Corrective</option>
+            </select>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Residual Risk -->
+      <div class="section">
+        <h3>Residual Risk Rating</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Probability/Likelihood</label>
+            <select formControlName="residualProbability">
+              <option *ngFor="let n of [1,2,3,4,5]" [value]="n">{{n}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Impact/Consequence</label>
+            <select formControlName="residualImpact">
+              <option *ngFor="let n of [1,2,3,4,5]" [value]="n">{{n}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Overall Residual Risk</label>
+            <input type="text" formControlName="residualRisk" readonly>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Risk Management -->
+      <div class="section">
+        <h3>Risk Management</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Risk Status</label>
+            <input type="text" formControlName="riskStatus" readonly>
+          </div>
+          <div class="form-group">
+            <label>Mitigating Plan</label>
+            <input type="text" formControlName="mitigatingPlan">
+          </div>
+          <div class="form-group">
+            <label>Risk Owner</label>
+            <select formControlName="riskOwner">
+              <option value="Owner A">Owner A</option>
+              <option value="Owner B">Owner B</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Mitigating Plan Responsible Person</label>
+            <select formControlName="responsiblePerson">
+              <option value="Person A">Person A</option>
+              <option value="Person B">Person B</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Mitigating Plan Completion Date</label>
+            <input type="date" formControlName="completionDate">
+          </div>
+        </div>
+      </div>
+  
+      <!-- Buttons -->
+      <div class="button-container">
+        <button type="submit" [disabled]="projectForm.invalid">Submit</button>
+        <button type="button" (click)="generateReport()" [disabled]="projectForm.invalid">Generate Report</button>
+      </div>
+  
+      <div [innerHTML]="reportContent"></div>
+    </form>
+  </div>
+  

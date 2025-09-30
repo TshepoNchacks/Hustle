@@ -1,0 +1,612 @@
+/* General Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #F3F4F6;
+    margin: 0;
+    padding: 0;
+}
+
+/* Dashboard Layout */
+.dashboard-container {
+    display: flex;
+    flex-wrap: wrap;  /* Ensures elements wrap on smaller screens */
+    min-height: 100vh;
+    overflow-x: hidden;  /* Prevents horizontal overflow */
+}
+
+/* Sidebar Base Styling */
+.sidebar {
+    width: 300px;
+    background: linear-gradient(135deg,  #5dade2, #0a192f, #007bff); /* Metallic Blue Gradient */
+    color: white;
+    height: 100vh;
+    padding-top: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    z-index: 1;
+}
+
+/* Sidebar Links */
+.sidebar nav ul li a {
+    text-decoration: none;
+    color: white;
+    padding: 15px;
+    display: block;
+    transition: background 0.3s;
+    width: 100%;
+    text-align: left;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Sidebar Logo */
+.sidebar-header {
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.sidebar-logo {
+    width: 80%;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+/* Highlight Active Main Menu */
+.sidebar nav ul li.active > a {
+    background-color: #323649;
+    border-radius: 5px;
+    color: #6577b5; /* Gold color for active section */
+}
+
+/* Dropdown Highlight */
+.sidebar nav ul li.active-dropdown {
+    background-color: #2A2E3D; /* Darker shade for open dropdown */
+    border-radius: 5px;
+}
+
+/* Active Dropdown Items */
+.sidebar nav ul li ul li.active a {
+    background-color: #4B5168;
+    color: #6577b5;
+    border-radius: 5px;
+}
+
+/* Dropdown Items */
+.sidebar nav ul li ul {
+    list-style: none;
+    padding-left: 20px; /* Indentation for dropdown items */
+    margin: 5px 0;
+}
+
+.sidebar nav ul li ul li a {
+    font-weight: normal;
+    padding: 10px;
+    font-size: 16px;
+    transition: background 0.3s;
+}
+
+/* Hover Effects */
+.sidebar nav ul li a:hover, .sidebar nav ul li ul li a:hover {
+    background-color: #50597B;
+    border-radius: 5px;
+}
+
+.dropdown-icon {
+    color: #6577b5; /* Default */
+    font-size: 18px;
+    transition: color 0.3s;
+}
+
+/* Hover effect for dropdown icon */
+a:hover .dropdown-icon {
+    color: #c7c6d1;
+}
+
+/* Main Content */
+main {
+    flex-grow: 1;
+    margin-left: 300px;
+    padding: 80px 20px 20px 20px; /* Adjusted for fixed top-navbar height */
+    min-width: 0; /* Prevent horizontal overflow */
+    max-width: 100%;
+    overflow-x: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Top Navbar Styling */
+.top-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #0a192f, #007bff, #5dade2); /* Metallic Blue Gradient */
+    padding: 15px 20px;
+    color: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+    position: fixed;
+    top: 0;
+    left: 300px;
+    right: 0;
+    height: 60px;
+    z-index: 1000;
+    transition: left 0.3s ease-in-out;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3); /* Subtle metallic edge */
+}
+
+/* Search Input Styling */
+.top-navbar input {
+    padding: 10px 15px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    outline: none;
+    width: 300px;
+    font-size: 16px;
+    transition: all 0.3s ease-in-out;
+}
+
+.top-navbar input:focus {
+    border-color: #6577b5;
+    box-shadow: 0px 0px 8px rgba(101, 119, 181, 0.5);
+}
+
+/* Profile Section */
+.profile-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: relative;
+}
+
+/* Profile Button */
+.profile {
+    background-color: #6577b5;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+}
+
+.profile:hover {
+    background-color: #50597B;
+    transform: scale(1.05);
+}
+
+/* Profile Dropdown */
+.profile-dropdown {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 10px;
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease-in-out;
+    transform: translateY(-10px);
+}
+
+.profile-info:hover .profile-dropdown {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Profile Dropdown Links */
+.profile-dropdown a {
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+    color: #1C1F29;
+    font-size: 14px;
+    transition: background 0.3s ease-in-out;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.profile-dropdown a:hover {
+    background: #6577b5;
+    color: white;
+}
+
+/* Responsive Navbar for Smaller Screens */
+@media (max-width: 768px) {
+    .top-navbar {
+        left: 0;
+        padding: 10px;
+        height: 50px;
+    }
+
+    .top-navbar input {
+        width: 200px;
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .profile {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+
+    .profile-dropdown {
+        width: 120px;
+    }
+
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    main {
+        margin-left: 0;
+        padding-top: 80px; /* Adjust for fixed top-navbar height */
+    }
+
+    .sidebar {
+        width: 250px;
+        position: relative;
+        height: auto;
+        margin-bottom: 20px;
+    }
+
+    .sidebar-logo {
+        width: 60%;
+    }
+
+    .sidebar nav ul {
+        padding-left: 0;
+    }
+
+    .sidebar nav ul li a {
+        font-size: 16px;
+    }
+
+    .sidebar-header {
+        display: none;
+    }
+}
+
+.content {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(227, 37, 37, 0.1);
+    margin-top: 500px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Section Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #E5E7EB;
+    padding-top: 50px;
+    margin-top: 50px;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1C1F29;
+}
+
+/* Back Button */
+.back-arrow-button {
+    background-color: #1C1F29;
+    color: white;
+    border: none;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background 0.3s ease-in-out;
+}
+
+.back-arrow-button .back-arrow {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+.back-arrow-button:hover {
+    background-color: #323649;
+}
+
+/* Statistics Section */
+.statistics {
+    text-align: center;
+}
+
+/* Welcome Section */
+.welcome-section {
+    text-align: center;
+    background: #F9FAFB;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.welcome-section h2 {
+    font-size: 22px;
+    font-weight: bold;
+    color: #1C1F29;
+}
+
+.welcome-section p {
+    font-size: 16px;
+    color: #6B7280;
+    margin-top: 5px;
+}
+
+/* Quick Actions */
+.quick-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.action-btn {
+    background-color: #1C1F29;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease-in-out;
+}
+
+.action-btn:hover {
+    background-color: #323649;
+}
+
+/* Statistics Overview */
+.stats-overview {
+    display: flex;
+    justify-content: space-around;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.stat-item h3 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #1C1F29;
+    margin-bottom: 5px;
+}
+
+.stat-item p {
+    font-size: 14px;
+    color: #6B7280;
+}
+
+/* Section Divider */
+.section-divider {
+    border: none;
+    height: 2px;
+    background: #E5E7EB;
+    margin: 25px 0;
+}
+
+/* Card Container */
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px; /* Increased gap for better spacing */
+    margin-top: 20px; /* Adjusted for better alignment */
+}
+
+/* Card Styling */
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    margin-bottom: 15px; /* Adds spacing below each card */
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Card Heading */
+.card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px; /* Slightly increased for better spacing */
+    color: #1C1F29;
+    text-align: center;
+}
+
+/* Card Buttons */
+.card button {
+    background-color: #1C1F29;
+    color: white;
+    border: none;
+    padding: 10px 14px; /* Increased padding for better UX */
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s ease-in-out;
+    margin-top: 8px; /* More space between buttons */
+    display: block;
+    width: 100%;
+}
+
+.card button:hover {
+    background-color: #323649;
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .content {
+        padding: 15px;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .card-container {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+
+    .back-arrow-button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+.card .material-icons {
+    font-size: 48px;
+    margin-bottom: 8px;
+}
+
+.card img {
+    width: 100%; /* Ensures full width */
+    height: 150px; /* Adjust height for uniformity */
+    object-fit: cover; /* Ensures the image fits well */
+    border-radius: 5px; /* Slightly rounded corners */
+    margin-bottom: 10px; /* Adds spacing below image */
+}
+
+.financial-year-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.financial-year-modal {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+}
+
+.financial-year-display {
+    color: white;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 300px;
+    background: linear-gradient(135deg, #5dade2, #0a192f, #007bff); /* Metallic Blue Gradient */
+    color: white;
+    height: 100vh;
+    padding-top: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    z-index: 1;
+    transition: transform 0.3s ease-in-out; /* Smooth transition for sliding */
+}
+
+/* Sidebar Collapsed */
+.sidebar.collapsed {
+    width: 80px; /* Adjust for collapsed width */
+    transform: translateX(-220px); /* Hide sidebar off-screen */
+}
+
+/* Sidebar Links */
+.sidebar nav ul li a {
+    text-decoration: none;
+    color: white;
+    padding: 15px;
+    display: block;
+    transition: background 0.3s;
+    width: 100%;
+    text-align: left;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Collapsed Sidebar Links */
+.sidebar.collapsed nav ul li a {
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+}
+
+/* Collapsed Sidebar Logo */
+.sidebar.collapsed .sidebar-logo {
+    width: 50%; /* Adjust logo size for collapsed sidebar */
+}
+
+/* Sidebar Toggle Button */
+.sidebar .sidebar-toggle {
+    position: absolute;
+    top: 20px;
+    left: 100%;
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: none; /* Hidden by default */
+}
+
+/* Show the toggle button on smaller screens */
+@media (max-width: 768px) {
+    .sidebar .sidebar-toggle {
+        display: block;
+    }
+
+    .sidebar.collapsed .sidebar-toggle {
+        left: -50px; /* Position the button to the left when collapsed */
+    }
+}
+/* Back Button Style */
+.top-navbar button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    display: inline-block;
+    transition: background-color 0.3s;
+}
+
+.top-navbar button:hover {
+    background-color: #0056b3;
+}

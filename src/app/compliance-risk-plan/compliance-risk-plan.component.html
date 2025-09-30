@@ -1,0 +1,135 @@
+<div class="risk-container">
+    <h2 class="form-title">Compliance Risk Assessment Form</h2>
+  
+    <form [formGroup]="complianceForm" >
+      <!-- Compliance Details -->
+      <div class="section">
+        <h3>Compliance Details</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Section</label>
+            <select formControlName="section">
+              <option value="Section A">Section A</option>
+              <option value="Section B">Section B</option>
+              <option value="Section C">Section C</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Provision of the Compliance Obligation</label>
+            <input type="text" formControlName="complianceProvision">
+          </div>
+          <div class="form-group">
+            <label>Plain Language Interpretation</label>
+            <input type="text" formControlName="plainLanguageInterpretation">
+          </div>
+        </div>
+      </div>
+  
+      <!-- Inherent Risk -->
+      <div class="section">
+        <h3>Inherent Risk Rating</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Probability/Likelihood</label>
+            <select formControlName="inherentProbability">
+              <option *ngFor="let n of [1,2,3,4,5]" [value]="n">{{n}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Impact/Consequence</label>
+            <select formControlName="inherentImpact">
+              <option *ngFor="let n of [1,2,3,4,5]" [value]="n">{{n}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Overall Inherent Risk</label>
+            <input type="text" formControlName="inherentRisk" readonly>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Existing Controls -->
+      <div class="section">
+        <h3>Control Measures</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Existing Controls</label>
+            <input type="text" formControlName="existingControls">
+          </div>
+          <div class="form-group">
+            <label>Type of Control</label>
+            <select formControlName="controlType">
+              <option value="Preventive">Preventive</option>
+              <option value="Detective">Detective</option>
+              <option value="Corrective">Corrective</option>
+            </select>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Residual Risk -->
+      <div class="section">
+        <h3>Residual Risk Rating</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Probability/Likelihood</label>
+            <select formControlName="residualProbability">
+              <option *ngFor="let n of [1,2,3,4,5]" [value]="n">{{n}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Impact/Consequence</label>
+            <select formControlName="residualImpact">
+              <option *ngFor="let n of [1,2,3,4,5]" [value]="n">{{n}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Overall Residual Risk</label>
+            <input type="text" formControlName="residualRisk" readonly>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Risk Management -->
+      <div class="section">
+        <h3>Mitigation Plan</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Risk Status</label>
+            <input type="text" formControlName="riskStatus" readonly>
+          </div>
+          <div class="form-group">
+            <label>Mitigating Action Plan</label>
+            <input type="text" formControlName="mitigatingPlan">
+          </div>
+          <div class="form-group">
+            <label>Action Plan Owner (Division)</label>
+            <select formControlName="riskOwner">
+              <option value="Compliance Division">Compliance Division</option>
+              <option value="Legal Division">Legal Division</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Mitigating Action Responsible Person</label>
+            <select formControlName="responsiblePerson">
+              <option value="Person A">Person A</option>
+              <option value="Person B">Person B</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Action Plan Completion Date</label>
+            <input type="date" formControlName="completionDate">
+          </div>
+        </div>
+      </div>
+  
+      <!-- Buttons -->
+      <div class="button-container">
+        <button type="submit" [disabled]="complianceForm.invalid">Submit</button>
+        <button type="button"  [disabled]="complianceForm.invalid">Generate Report</button>
+      </div>
+  
+      <div [innerHTML]="reportContent"></div>
+    </form>
+  </div>
+  

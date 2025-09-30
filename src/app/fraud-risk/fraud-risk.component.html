@@ -1,0 +1,240 @@
+<div class="risk-container">
+
+  <!-- Top Right Back Button -->
+  <div class="top-right-button" *ngIf="showForm || updateForm || showCaptureList || showCaptureListActionPlan || showChart">
+    <button class="btn btn-outline-secondary" (click)="goBack()">
+      <span class="material-icons">arrow_back</span> Back
+    </button>
+  </div>
+
+  <!-- Initial Buttons -->
+  <div *ngIf="!showForm && !updateForm && !showCaptureList && !showCaptureListActionPlan && !showChart" class="button-container">
+    <h2>Select an Action</h2>
+    <button *ngIf="currentUser?.role !== 'User'" (click)="startNewFraudRisk()">Capture/Update Fraud Risk</button>
+    <button (click)="updateFraudProgress()">Update Action Plan Progress</button>
+    <button (click)="generateFraudReport()">Generate/View Report</button>
+  </div>
+
+  <!-- Captured Fraud Risks List -->
+  <div *ngIf="showCaptureList && !showForm">
+    <div class="header">
+      <h2>Captured Fraud Risks</h2>
+      <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()" class="form-control w-50" placeholder="Search by Risk Owner or Description">
+      <button class="btn btn-primary" (click)="addNewFraudRisk()">➕ Capture New Fraud Risk</button>
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show">
+      {{ successMessage }}
+      <button type="button" class="btn-close" (click)="closeAlert()" aria-label="Close"></button>
+    </div>
+
+    <mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="fraudRiskNumber">
+        <mat-header-cell *matHeaderCellDef>Risk Number</mat-header-cell>
+        <mat-cell *matCellDef="let risk">{{ risk.fraudRiskNumber }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="fraudRiskDescription">
+        <mat-header-cell *matHeaderCellDef>Risk Description</mat-header-cell>
+        <mat-cell *matCellDef="let risk">{{ risk.fraudRiskDescription }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="riskOwner">
+        <mat-header-cell *matHeaderCellDef>Risk Owner</mat-header-cell>
+        <mat-cell *matCellDef="let risk">{{ risk.riskOwner }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="capturedDate">
+        <mat-header-cell *matHeaderCellDef>Captured Date</mat-header-cell>
+        <mat-cell *matCellDef="let risk">{{ risk.capturedDate }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+        <mat-cell *matCellDef="let risk">
+          <div style="display: flex; gap: 8px;">
+            <button mat-button color="primary" (click)="editFraudRisk(risk)">✏️ Update Risk</button>
+            <button mat-button color="warn" (click)="deleteFraudRisk(risk.id)">🗑️ Delete</button>
+          </div>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+    <mat-paginator [pageSize]="5" [pageSizeOptions]="[5,10,20]" showFirstLastButtons></mat-paginator>
+  </div>
+
+  <!-- Fraud Risk Form -->
+  <div *ngIf="showForm">
+    <h2 class="form-title">{{ isEditing ? 'Edit Fraud Risk' : 'Capture New Fraud Risk' }}</h2>
+
+    <form [formGroup]="fraudForm" (ngSubmit)="submitFraudForm()">
+
+      <!-- Risk Description -->
+      <div class="section">
+        <h3>Risk Description</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Fraud Risk Description</label>
+            <input type="text" formControlName="fraudRiskDescription">
+          </div>
+          <div class="form-group">
+            <label>Root Causes</label>
+            <input type="text" formControlName="rootCauses">
+          </div>
+          <div class="form-group">
+            <label>Consequences</label>
+            <input type="text" formControlName="consequences">
+          </div>
+        </div>
+      </div>
+
+      <!-- Inherent Risk Rating -->
+      <div class="section">
+        <h3>Inherent Risk Rating</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Probability/Likelihood</label>
+            <select formControlName="inherentProbability">
+              <option *ngFor="let n of [1,2,3,4,5]" [value]="n">{{ n }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Impact/Consequence</label>
+            <select formControlName="inherentImpact">
+              <option *ngFor="let n of [1,2,3,4,5]" [value]="n">{{ n }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Overall Inherent Risk</label>
+            <input type="text" formControlName="inherentRisk" readonly>
+          </div>
+        </div>
+      </div>
+
+      <!-- Control Measures -->
+      <div class="section">
+        <h3>Control Measures</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Existing Controls</label>
+            <input type="text" formControlName="existingControls">
+          </div>
+          <div class="form-group">
+            <label>Type of Control</label>
+            <select formControlName="controlType">
+              <option value="Preventive">Preventive</option>
+              <option value="Detective">Detective</option>
+              <option value="Corrective">Corrective</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Residual Risk Rating -->
+      <div class="section">
+        <h3>Residual Risk Rating</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Probability/Likelihood</label>
+            <select formControlName="residualProbability">
+              <option *ngFor="let n of [1,2,3,4,5]" [value]="n">{{ n }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Impact/Consequence</label>
+            <select formControlName="residualImpact">
+              <option *ngFor="let n of [1,2,3,4,5]" [value]="n">{{ n }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Overall Residual Risk</label>
+            <input type="text" formControlName="residualRisk" readonly>
+          </div>
+        </div>
+      </div>
+
+      <!-- Risk Management & Action Plan -->
+      <div class="section my-4 p-4 bg-light border rounded shadow-sm">
+        <h3>Risk Management & Action Plan</h3>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Risk Status</label>
+            <input type="text" formControlName="riskStatus" readonly>
+          </div>
+          <div class="form-group">
+            <label>Mitigating / Action Plan</label>
+            <input type="text" formControlName="mitigatingPlan">
+          </div>
+          <div class="form-group">
+            <label>Risk Owner</label>
+            <select formControlName="riskOwner">
+              <option value="Owner A">Owner A</option>
+              <option value="Owner B">Owner B</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Mitigating Plan Responsible Person</label>
+            <select formControlName="responsiblePerson">
+              <option value="Person A">Person A</option>
+              <option value="Person B">Person B</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Mitigating Plan Completion Date</label>
+            <input type="date" formControlName="completionDate">
+          </div>
+        </div>
+
+        <!-- Action Plan Table -->
+        <div class="table-responsive mt-4">
+          <table class="table table-bordered table-striped align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Action Plan</th>
+                <th>Due Date</th>
+                <th>Progress</th>
+                <th>Status</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let plan of actionPlans; let i = index">
+                <td>{{ plan.actionPlan }}</td>
+                <td>{{ plan.dueDate | date }}</td>
+                <td>{{ plan.progress }}</td>
+                <td>
+                  <span [ngClass]="{
+                    'badge bg-success': plan.planStatus === 'Completed',
+                    'badge bg-warning text-dark': plan.planStatus === 'In progress',
+                    'badge bg-secondary': plan.planStatus === 'Not started',
+                    'badge bg-danger': plan.planStatus === 'Overdue'
+                  }">{{ plan.planStatus }}</span>
+                </td>
+                <td class="text-center">
+                  <mat-icon class="text-primary me-2" style="cursor:pointer" (click)="editActionPlan(i)">edit</mat-icon>
+                  <mat-icon class="text-danger" style="cursor:pointer" (click)="deleteActionPlan(i)">delete</mat-icon>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Form Buttons -->
+      <div class="button-container">
+        <button type="submit" [disabled]="fraudForm.invalid || actionPlans.length === 0">
+          {{ isEditing ? 'Update Fraud Risk' : 'Submit Fraud Risk' }}
+        </button>
+        <button type="button" (click)="generateFraudReport()" [disabled]="fraudForm.invalid">Generate Report</button>
+      </div>
+
+      <!-- Generated Report -->
+      <div [innerHTML]="reportContent"></div>
+
+    </form>
+  </div>
+
+</div>

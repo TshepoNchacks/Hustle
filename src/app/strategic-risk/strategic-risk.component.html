@@ -1,0 +1,501 @@
+
+
+
+
+
+
+
+  <div class="risk-container">
+
+    <div class="top-right-button" *ngIf="showForm || updateForm || showCaptureList || showCaptureListActionPlan || showChart">
+      <button class="btn btn-outline-secondary" (click)="goBack()">
+        <span class="material-icons">arrow_back</span> Back
+      </button>
+    </div>
+    
+
+    <!-- Initial Buttons -->
+    <div *ngIf="!showForm && !updateForm && !showCaptureList && !showCaptureListActionPlan && !showChart" class="button-container">
+  <h2>Select an Action</h2>
+
+  <!-- This button is only for Admins/SuperAdmins -->
+  <button *ngIf="currentUser?.role !== 'User'" (click)="startNewRisk()">
+    Capture/Update Strategic Risk Register
+  </button>
+
+  <!-- These buttons are shown to all roles -->
+  <button (click)="updateProgress()">Update Strategic Risk Action Plan Progress</button>
+  <button (click)="generateReport()">Generate and View Report</button>
+</div>
+
+  
+    <!-- List of Captured Risks -->
+    <div *ngIf="showCaptureList && !showForm">
+      <div class="header">
+        <h2>Captured Strategic Risks</h2>
+        <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()" class="form-control w-50" placeholder="Search by Strategic Objective or Risk Owner">
+
+        <button class="btn btn-primary" (click)="addNewRisk()">➕ Capture New Risk</button>
+      </div>
+
+      <!-- Success Alert -->
+<div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ successMessage }}
+    <button type="button" class="btn-close" (click)="closeAlert()" aria-label="Close"></button>
+  </div>
+  
+    <!-- Table for displaying captured risks -->
+<mat-table [dataSource]="dataSource">
+  <ng-container matColumnDef="riskNumber">
+    <mat-header-cell *matHeaderCellDef>Risk Number</mat-header-cell>
+    <mat-cell *matCellDef="let risk">{{ risk.riskNumber }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="strategicObjective">
+    <mat-header-cell *matHeaderCellDef>Strategic Objective</mat-header-cell>
+    <mat-cell *matCellDef="let risk">{{ risk.strategicObjective }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="riskDescription">
+    <mat-header-cell *matHeaderCellDef>Risk Description</mat-header-cell>
+    <mat-cell *matCellDef="let risk">{{ risk.riskDescription }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="riskOwner">
+    <mat-header-cell *matHeaderCellDef>Risk Owner</mat-header-cell>
+    <mat-cell *matCellDef="let risk">{{ risk.riskOwner }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="capturedDate">
+    <mat-header-cell *matHeaderCellDef>Captured Date</mat-header-cell>
+    <mat-cell *matCellDef="let risk">{{ risk.capturedDate }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+    <mat-cell *matCellDef="let risk">
+      <div style="display: flex; gap: 8px;">
+        <button mat-button color="primary" (click)="editRisk(risk)">✏️ Update Risk</button>
+        <button mat-button color="warn" (click)="deleteRisk(risk.id)">🗑️ Delete</button>
+      </div>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
+<!-- Paginator -->
+<mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+
+
+    <!-- Update Progress Section --><!-- List of Captured Risks -->
+    <div *ngIf="showCaptureListActionPlan && !updateForm">
+      <div class="header">
+        <h2>Update Action Plan</h2>
+        <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()" class="form-control w-50" placeholder="Search by Strategic Objective or Risk Owner">
+
+      </div>
+      <mat-table [dataSource]="dataSource1" class="mat-table">
+    
+        <ng-container matColumnDef="riskNumber">
+          <mat-header-cell *matHeaderCellDef>Risk Number</mat-header-cell>
+          <mat-cell *matCellDef="let risk">{{ risk.riskNumber }}</mat-cell>
+        </ng-container>
+    
+        <ng-container matColumnDef="strategicObjective">
+          <mat-header-cell *matHeaderCellDef>Strategic Objective</mat-header-cell>
+          <mat-cell *matCellDef="let risk">{{ risk.strategicObjective }}</mat-cell>
+        </ng-container>
+    
+        <ng-container matColumnDef="status">
+          <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+          <mat-cell *matCellDef="let risk">{{ risk.planStatus }}</mat-cell>
+        </ng-container>
+    
+        <ng-container matColumnDef="capturedDate">
+          <mat-header-cell *matHeaderCellDef>Captured Date</mat-header-cell>
+          <mat-cell *matCellDef="let risk">{{ risk.capturedDate }}</mat-cell>
+        </ng-container>
+    
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+          <mat-cell *matCellDef="let risk">
+            <button mat-button (click)="editProgress(risk)">Edit Progress</button>
+          </mat-cell>
+        </ng-container>
+    
+        <mat-header-row *matHeaderRowDef="displayedColumns1"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns1;"></mat-row>
+      </mat-table>
+
+      <!-- Paginator -->
+<mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+
+
+  
+    <!-- Strategic Risk Form -->
+    <div *ngIf="showForm">
+      <h2 class="form-title">{{ isEditing ? 'Edit Strategic Risk' : 'Capture New Strategic Risk' }}</h2>
+  
+      <form [formGroup]="riskForm" (ngSubmit)="submitRiskForm()">
+        <!-- Risk Details Section -->
+        <div class="section">
+            <h3>Risk Details</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Strategic Objective</label>
+                    <input type="text" formControlName="strategicObjective">
+                </div>
+                <div class="form-group">
+                    <label>Strategic Risk Description</label>
+                    <input type="text" formControlName="riskDescription">
+                </div>
+                <div class="form-group">
+                    <label>Root Causes</label>
+                    <input type="text" formControlName="rootCauses">
+                </div>
+                <div class="form-group">
+                    <label>Consequences</label>
+                    <input type="text" formControlName="consequences">
+                </div>
+            </div>
+        </div>
+
+        <!-- Inherent Risk Rating Section -->
+        <div class="section">
+            <h3>Inherent Risk Rating</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Probability</label>
+                    <select formControlName="inherentProbability">
+                        <option *ngFor="let num of [1,2,3,4,5]" [value]="num">{{num}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Impact/Consequence</label>
+                    <select formControlName="inherentImpact">
+                        <option *ngFor="let num of [1,2,3,4,5]" [value]="num">{{num}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Overall Inherent Risk</label>
+                    <input type="text" formControlName="inherentRisk" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Risk Status</label>
+                    <input type="text" formControlName="riskStatus1" readonly   [ngClass]="getRiskStatusClass(riskForm.get('riskStatus1')?.value)" >
+                </div>
+            </div>
+        </div>
+
+        <!-- Control Measures Section -->
+        <div class="section">
+            <h3>Control Measures</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Existing Controls</label>
+                    <input type="text" formControlName="existingControls">
+                </div>
+                <div class="form-group">
+                    <label>Type of Control</label>
+                    <select formControlName="controlType">
+                        <option value="Preventive">Preventive</option>
+                        <option value="Detective">Detective</option>
+                        <option value="Corrective">Corrective</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Residual Risk Rating Section -->
+        <div class="section">
+            <h3>Residual Risk Rating</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Probability</label>
+                    <select formControlName="residualProbability">
+                        <option *ngFor="let num of [1,2,3,4,5]" [value]="num">{{num}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Impact/Consequence</label>
+                    <select formControlName="residualImpact">
+                        <option *ngFor="let num of [1,2,3,4,5]" [value]="num">{{num}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Overall Residual Risk</label>
+                    <input type="text" formControlName="residualRisk" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Risk Status</label>
+                    <input type="text" formControlName="riskStatus" readonly  [ngClass]="getRiskStatusClass(riskForm.get('riskStatus')?.value)">
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- Risk Management Section -->
+        <div class="section">
+            <h3>Risk Management</h3>
+            <div class="form-grid">
+               
+                <div class="form-group">
+                    <label>Mitigating/Action Plan</label>
+                    <input type="text" formControlName="mitigatingPlan">
+                </div>
+                <div class="form-group">
+                    <label>Risk Owner</label>
+                    <select formControlName="riskOwner">
+                      <option value="" disabled selected>-- Select Risk Owner --</option>
+                      <option *ngFor="let u of users" [value]="u.username">
+                        {{ u.username }} ({{ u.role }})
+                      </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Mitigating Plan Responsible Person</label>
+                    <select formControlName="responsiblePerson">
+                        <option value="" disabled selected>-- Responsible Person --</option>
+                      <option *ngFor="let u of users" [value]="u.username">
+                        {{ u.username }} ({{ u.role }})
+                      </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Completion Date</label>
+                    <input type="date" formControlName="completionDate">
+                </div>
+            </div>
+        </div>
+
+      <div class="section my-4 p-4 bg-light border rounded shadow-sm">
+  <h3 class="mb-4">Action Plan</h3>
+
+  <!-- Action Plan Form -->
+  <div [formGroup]="actionPlanForm" class="row g-3 mb-4">
+
+    <div class="col-md-6">
+      <label for="actionPlan" class="form-label">Action Plan</label>
+      <input id="actionPlan" type="text" formControlName="actionPlan" class="form-control" />
+    </div>
+
+    <div class="col-md-6">
+      <label for="dueDate" class="form-label">Action Plan Due Date</label>
+      <input id="dueDate" type="date" formControlName="dueDate" class="form-control" />
+    </div>
+
+    <div class="col-md-6">
+      <label for="progress" class="form-label">Progress</label>
+      <input id="progress" type="text" formControlName="progress" class="form-control" />
+    </div>
+
+    <div class="col-md-6">
+      <label for="planStatus" class="form-label">Action Plan Status</label>
+      <select id="planStatus" formControlName="planStatus" class="form-select">
+        <option value="" disabled selected>Select</option>
+        <option value="Completed">Completed</option>
+        <option value="In progress">In progress</option>
+        <option value="Not started">Not started</option>
+        <option value="Overdue">Overdue</option>
+      </select>
+    </div>
+
+   <div class="col-md-4 d-flex align-items-end">
+      <button type="button" (click)="onAddOrUpdate()" class="btn btn-primary w-100">
+        {{ isEditing ? 'Update' : 'Add' }} Action Plan
+      </button>
+    </div>
+  </div>
+
+  <!-- Table to Display Action Plans -->
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Action Plan</th>
+          <th>Due Date</th>
+          <th>Progress</th>
+          <th>Status</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let plan of actionPlans; let i = index">
+          <td>{{ plan.actionPlan }}</td>
+          <td>{{ plan.dueDate | date }}</td>
+          <td>{{ plan.progress }}</td>
+          <td>
+            <span [ngClass]="{
+              'badge bg-success': plan.planStatus === 'Completed',
+              'badge bg-warning text-dark': plan.planStatus === 'In progress',
+              'badge bg-secondary': plan.planStatus === 'Not started',
+              'badge bg-danger': plan.planStatus === 'Overdue'
+            }">
+              {{ plan.planStatus }}
+            </span>
+          </td>
+          <td class="text-center">
+            <mat-icon
+              class="text-primary me-2"
+              style="cursor: pointer;"
+              (click)="editActionPlan(i)"
+              aria-label="Edit"
+            >edit</mat-icon>
+            <mat-icon
+              class="text-danger"
+              style="cursor: pointer;"
+              (click)="deleteActionPlan(i)"
+              aria-label="Delete"
+            >delete</mat-icon>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+        <div class="button-container">
+          <button type="submit" [disabled]=" actionPlans.length === 0">
+  {{ isEditing ? 'Update Risk' : 'Submit Risk' }}
+</button>
+          <button type="button" [disabled]="riskForm.invalid">Generate Report</button>
+        </div>
+  
+        <!-- Generated Report -->
+        <div [innerHTML]="reportContent"></div>
+      </form>
+    </div>
+
+    <div *ngIf="updateForm" class="section my-4 p-4 bg-light border rounded shadow-sm">
+  <h2 class="form-title">Update Action Plan</h2>
+
+  <!-- 1: Sub-form for adding/editing rows -->
+  <div [formGroup]="actionPlanForm" class="row g-3 mb-4">
+    <div class="col-md-6">
+      <label class="form-label">Action Plan</label>
+      <input formControlName="actionPlan" type="text" class="form-control"/>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Action Plan Due Date</label>
+      <input formControlName="dueDate" type="date" class="form-control"/>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Progress</label>
+      <input formControlName="progress" type="text" class="form-control"/>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Action Plan Status</label>
+      <select formControlName="planStatus" class="form-select">
+        <option value="" disabled>Select</option>
+        <option>Completed</option>
+        <option>In progress</option>
+        <option>Not started</option>
+        <option>Overdue</option>
+      </select>
+    </div>
+    <div class="col-12 d-flex justify-content-end">
+      <button type="button"
+              class="btn btn-primary"
+              (click)="onAddOrUpdate()"
+              [disabled]="actionPlanForm.invalid">
+        {{ isEditing ? 'Update' : 'Add' }} Plan
+      </button>
+    </div>
+  </div>
+
+  <!-- 2: Table of that risk’s plans -->
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Action Plan</th>
+          <th>Due Date</th>
+          <th>Progress</th>
+          <th>Status</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let plan of actionPlans; let i = index">
+          <td>{{ plan.actionPlan }}</td>
+          <td>{{ plan.dueDate | date }}</td>
+          <td>{{ plan.progress }}</td>
+          <td>
+            <span [ngClass]="{
+              'badge bg-success': plan.planStatus==='Completed',
+              'badge bg-warning text-dark': plan.planStatus==='In progress',
+              'badge bg-secondary': plan.planStatus==='Not started',
+              'badge bg-danger': plan.planStatus==='Overdue'
+            }">{{ plan.planStatus }}</span>
+          </td>
+          <td class="text-center">
+            <mat-icon class="text-primary me-2" style="cursor:pointer" (click)="editActionPlan(i)">edit</mat-icon>
+            <mat-icon class="text-danger" style="cursor:pointer" (click)="deleteActionPlan(i)">delete</mat-icon>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 3: Final submit of entire risk w/ updated plans -->
+  <div class="button-container mt-4">
+    <button type="button"
+        class="btn btn-success"
+        (click)="updateActionPlan()"
+        [disabled]="actionPlans.length === 0">
+  Save All
+</button>
+    <button type="button" class="btn btn-secondary" (click)="goBack()">Cancel</button>
+  </div>
+</div>
+
+    <!-- Display Risk Stats -->
+<div *ngIf="showChart" class="risk-summary">
+  <h3>Overall Acion Plans Captured</h3>
+
+  <label for="chartType">Select Chart Type:</label>
+  <select id="chartType" [(ngModel)]="selectedChartType">
+    <option *ngFor="let type of chartTypes" [value]="type">{{ type | titlecase }}</option>
+  </select>
+
+  <div style="max-width: 600px; margin-top: 20px;">
+    <canvas baseChart
+      [data]="chartData"
+      [type]="selectedChartType"
+      [options]="chartOptions"
+      [legend]="true">
+    </canvas>
+  </div>
+
+  <table class="table mt-4">
+    <thead>
+      <tr>
+        <th>Plan Status</th>
+        <th>Count</th>
+        <th>Percentage (%)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let stat of riskStats">
+        <td>{{ stat.status }}</td>
+        <td>{{ stat.count }}</td>
+        <td>{{ stat.percent }}%</td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- ✅ Display Total Count -->
+<div class="text-end fw-bold mt-2">
+  Total Captured Action Plans: {{ getTotalActionPlans() }}
+</div>
+
+  <button (click)="downloadReport()">Download Report</button>
+</div>
+
+
+  </div>
+  
+  

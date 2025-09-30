@@ -1,0 +1,232 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    background-color: #4f2de7;
+    overflow: hidden;
+  }
+
+  .main-container {
+    display: flex;
+    height: 100vh;
+  }
+
+  .welcome-section {
+    /* background-color: #2a2a30; */
+    background: linear-gradient(135deg,  #5dade2,#0a192f, #007bff); /* Metallic Blue Gradient */
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom-right-radius: 100%;
+  }
+
+  .welcome-content {
+    text-align: center;
+    transform: translateX(-10px); /* shifts all content left */
+  }
+
+  .welcome-content img {
+    width: 180px;
+    margin-bottom: 20px;
+  }
+
+  .welcome-content h1 {
+    color: white;
+    font-size: 48px;
+    font-weight: bold;
+  }
+
+  .welcome-content p {
+    color: white;
+    font-size: 18px;
+    margin-top: 10px;
+    line-height: 1.6;
+  }
+
+  .form-container {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .form-box {
+    background: white;
+    padding: 60px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    width: 500px;
+    text-align: center;
+    animation: fadeIn 1.2s ease-in-out;
+  }
+
+  .logo-container {
+    margin-bottom: 40px;
+  }
+
+  .logo-container img {
+    width: 300px;
+    height: auto;
+    animation: fadeIn 1.5s ease-in-out;
+  }
+
+  .input-group {
+    margin-bottom: 25px;
+  }
+
+  .input-group input {
+    width: 100%;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    outline: none;
+    transition: border 0.3s, background-color 0.3s, transform 0.2s;
+    background-color: #f0f0f0;
+  }
+
+  .input-group input:focus {
+    border-color: #58a08d;
+    background-color: white;
+    transform: scale(1.02);
+  }
+
+  button {
+    width: 100%;
+    padding: 15px;
+    background-color: #2a2a30;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    font-size: 18px;
+  }
+
+  button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+
+  button:hover:not(:disabled) {
+    background-color: #14211d;
+    transform: scale(1.03);
+  }
+
+  .links {
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .links a {
+    color: #58a08d;
+    text-decoration: none;
+    font-size: 15px;
+    transition: color 0.2s;
+  }
+
+  .links a:hover {
+    text-decoration: underline;
+    color: #1b7c64;
+  }
+
+  .links p {
+    margin-top: 15px;
+  }
+
+/* ========================= */
+/* Responsive media queries  */
+/* ========================= */
+
+/* Tablets and below */
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .welcome-section,
+  .form-container {
+    width: 100%;
+    border-bottom-right-radius: 0;
+  }
+
+  .welcome-content h1 {
+    font-size: 36px;
+  }
+
+  .welcome-content p {
+    font-size: 16px;
+  }
+
+  .form-box {
+    padding: 30px 20px;
+    margin-top: 20px;
+  }
+
+  .logo-container img {
+    max-width: 220px;
+  }
+}
+
+/* Mobile phones */
+@media (max-width: 480px) {
+  .welcome-content h1 {
+    font-size: 28px;
+  }
+
+  .welcome-content p {
+    font-size: 14px;
+  }
+
+  .logo-container img {
+    max-width: 180px;
+  }
+
+  .input-group input {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  button {
+    padding: 12px;
+    font-size: 16px;
+  }
+}
+
+
+/* Progress Bar Container */
+.progress-bar-container {
+  width: 100%;
+  height: 5px;
+  background-color: #f3f3f3;
+  margin-top: 15px;
+  border-radius: 10px;
+}
+
+/* Progress Bar */
+.progress-bar {
+  width: 0;
+  height: 100%;
+  background-color: #007bff;
+  animation: loading 2s linear infinite;
+}
+
+@keyframes loading {
+  0% {
+    width: 0%;
+  }
+  50% {
+    width: 50%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+/* Hide Progress Bar when not loading */
+.progress-bar-container {
+  display: none;
+}

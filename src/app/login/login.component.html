@@ -1,0 +1,49 @@
+
+
+<div class="main-container">
+  <div class="welcome-section">
+    <div class="welcome-content">
+      <!-- <img src="assets/Final-GRC-System-logo.png" alt="Logo" /> -->
+      <h1>Welcome to TCA</h1>
+      <h1>GRC</h1>
+      <!-- <p>Its not just a GRC, its AI enabled assurance partner</p> -->
+      <p>Not just GRC. Your AI-powered partner in combined assurance</p>
+    </div>
+  </div>
+
+  <div class="form-container">
+    <div class="form-box fade-in">
+      <div class="logo-container">
+        <img src="assets/Final-GRC-System-logo.png" alt="Logo" />
+      </div>
+
+      <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+        <div class="input-group">
+          <input
+            id="username"
+            placeholder="Username"
+            formControlName="username"
+          />
+        </div>
+        <div class="input-group">
+          <input
+            id="password"
+            placeholder="Password"
+            formControlName="password"
+            type="password"
+          />
+        </div>
+        <!-- Angular Material Progress Bar -->
+        <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+        <button type="submit" [disabled]="!loginForm.valid">Sign in</button>
+        <p *ngIf="errorMessage" style="color: red">{{ errorMessage }}</p>
+      </form>
+
+      <div class="links">
+        <a href="#">Forgot password?</a>
+      </div>
+
+      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+    </div>
+  </div>
+</div>

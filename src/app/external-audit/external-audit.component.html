@@ -1,0 +1,77 @@
+<div class="risk-container">
+    <h2 class="form-title">Audit Action Plan</h2>
+  
+    <form [formGroup]="auditForm" (ngSubmit)="submitAuditForm()">
+      <div class="section">
+        <h3>Audit Findings</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Audit Finding</label>
+            <input type="text" formControlName="finding" />
+          </div>
+          <div class="form-group">
+            <label>Category</label>
+            <select formControlName="category">
+              <option value="" disabled>Select</option>
+              <option>Financial</option>
+              <option>Performance</option>
+              <option>Compliance</option>
+              <option>Internal Controls</option>
+              <option>IT</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Action Plan</label>
+            <input type="text" formControlName="actionPlan" />
+          </div>
+          <div class="form-group">
+            <label>Action Plan Due Date</label>
+            <input type="date" formControlName="dueDate" />
+          </div>
+          <div class="form-group">
+            <label>Responsible Person</label>
+            <select formControlName="responsiblePerson">
+              <option value="" disabled>Select</option>
+              <option>Person A</option>
+              <option>Person B</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Progress</label>
+            <input type="text" formControlName="progress" />
+          </div>
+          <div class="form-group">
+            <label>Action Plan Status</label>
+            <select formControlName="planStatus">
+              <option value="" disabled>Select</option>
+              <option>Completed</option>
+              <option>In progress</option>
+              <option>Not started</option>
+              <option>Overdue</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Audit Finding Status</label>
+            <select formControlName="findingStatus">
+              <option value="" disabled>Select</option>
+              <option>Resolved</option>
+              <option>Not resolved</option>
+              <option>Unresolvable: timebound</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Proof of Evidence (POE)</label>
+            <input type="file" formControlName="poe" />
+          </div>
+        </div>
+      </div>
+  
+      <div class="button-container">
+        <button type="submit" [disabled]="auditForm.invalid">Submit Audit Plan</button>
+        <button type="button" (click)="generateAuditReport()" [disabled]="auditForm.invalid">Generate Report</button>
+      </div>
+  
+      <div [innerHTML]="auditReportContent"></div>
+    </form>
+  </div>
+  

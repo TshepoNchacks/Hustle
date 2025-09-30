@@ -1,0 +1,107 @@
+<div class="risk-container">
+    <h3 class="form-title">Compliance Risk profile</h3>
+  
+    <form [formGroup]="riskForm" (ngSubmit)="onSubmit()">
+      
+      <div class="section">
+        <h3>Risk Details</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Category</label>
+            <select formControlName="category">
+              <option value="CORE">CORE</option>
+              <option value="TOPICAL/PERTINENT">TOPICAL/PERTINENT</option>
+              <option value="SECONDARY">SECONDARY</option>
+            </select>
+          </div>
+        </div>
+      </div>
+  
+      <div class="section">
+        <h3>Inherent Risk Rating</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Probability/Likelihood</label>
+            <select formControlName="inherentProbability">
+              <option *ngFor="let num of [1,2,3,4,5]" [value]="num">{{ num }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Impact/Consequence</label>
+            <select formControlName="inherentImpact">
+              <option *ngFor="let num of [1,2,3,4,5]" [value]="num">{{ num }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Overall Inherent Risk</label>
+            <input type="text" formControlName="overallInherentRisk" readonly>
+          </div>
+          <div class="form-group">
+            <label>Existing Controls</label>
+            <input type="text" formControlName="existingControls">
+          </div>
+        </div>
+      </div>
+  
+      <div class="section">
+        <h3>Residual Risk Rating</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Probability/Likelihood</label>
+            <select formControlName="residualProbability">
+              <option *ngFor="let num of [1,2,3,4,5]" [value]="num">{{ num }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Impact/Consequence</label>
+            <select formControlName="residualImpact">
+              <option *ngFor="let num of [1,2,3,4,5]" [value]="num">{{ num }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Overall Residual Risk</label>
+            <input type="text" formControlName="overallResidualRisk" readonly>
+          </div>
+          <div class="form-group">
+            <label>Risk Status</label>
+            <input type="text" formControlName="riskStatus" readonly>
+          </div>
+        </div>
+      </div>
+  
+      <div class="section">
+        <h3>Mitigation & Responsibility</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Mitigating Action Plan</label>
+            <input type="text" formControlName="mitigatingPlan">
+          </div>
+          <div class="form-group">
+            <label>Action Plan Owner (Division)</label>
+            <select formControlName="actionPlanOwner">
+              <option value="Division A">Division A</option>
+              <option value="Division B">Division B</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Mitigating Action Responsible Person</label>
+            <select formControlName="responsiblePerson">
+              <option value="Person 1">Person 1</option>
+              <option value="Person 2">Person 2</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Action Plan Completion Date</label>
+            <input type="date" formControlName="completionDate">
+          </div>
+        </div>
+      </div>
+  
+      <div class="button-container">
+        <button type="submit" [disabled]="!riskForm.valid">Submit</button>
+        <button type="button" (click)="generateReport()" [disabled]="riskForm.invalid">Generate Report</button>
+      </div>
+  
+    </form>
+  </div>
+  

@@ -1,0 +1,202 @@
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" [ngClass]="{'collapsed': isSidebarCollapsed}">
+        <div class="sidebar-header">
+            <img src="assets/Final-GRC-System-logo.png" alt="Logo" class="sidebar-logo" />
+        </div>
+        <nav>
+            <ul>
+                <!-- Dashboards -->
+                <li [ngClass]="{'active': activeSection === 'statistics'}">
+                    <a (click)="showSection('statistics'); activeDropdown = null;" class="active-link">🏠 Dashboards</a>
+                </li>
+    
+                <!-- Governance -->
+                <li [ngClass]="{'active-dropdown': activeDropdown === 'Governance'}">
+                    <a (click)="toggleDropdown('Governance')">
+                        Governance <span class="dropdown-icon">{{ activeDropdown === 'Governance' ? '▼' : '▶' }}</span>
+                    </a>
+                    <ul *ngIf="activeDropdown === 'Governance'">
+                        <li [ngClass]="{'active': activeSection === 'Governance'}">
+                            <a (click)="showSection('Governance')">Governance Overview</a>
+                        </li>
+                        <li><a (click)="showSection('CorporateGovernance')">Corporate Governance</a></li>
+                    </ul>
+                </li>
+    
+                <!-- Risk Management -->
+                <li [ngClass]="{'active-dropdown': activeDropdown === 'Risk'}">
+                    <a (click)="toggleDropdown('Risk')">
+                        Risk Management <span class="dropdown-icon">{{ activeDropdown === 'Risk' ? '▼' : '▶'  }}</span>
+                    </a>
+                    <ul *ngIf="activeDropdown === 'Risk'">
+                        <li [ngClass]="{'active': activeSection === 'StrategicRisk'}">
+                            <a (click)="showSection('StrategicRisk')">Strategic Risk</a>
+                        </li>
+                        <li [ngClass]="{'active': activeSection === 'OperationalRisk'}">
+                            <a (click)="showSection('OperationalRisk')">Operational Risk</a>
+                        </li>
+                        <li><a (click)="showSection('fraudRisk')">Fraud Risk</a></li>
+                        <li><a (click)="showSection('projectRisk')">Project Risk</a></li>
+                    </ul>
+                </li>
+    
+                <!-- Compliance Management -->
+                <li [ngClass]="{'active-dropdown': activeDropdown === 'Compliance'}">
+                    <a (click)="toggleDropdown('Compliance')">
+                        Compliance Management <span class="dropdown-icon">{{ activeDropdown === 'Compliance' ? '▼' : '▶'  }}</span>
+                    </a>
+                    <ul *ngIf="activeDropdown === 'Compliance'">
+                        <li [ngClass]="{'active': activeSection === 'complianceRiskProfile'}">
+                            <a (click)="showSection('complianceRiskProfile')">Compliance Universe & Risk Profile</a>
+                        </li>
+                        <li><a (click)="showSection('complianceRiskPlan')">Compliance Risk Management Plan</a></li>
+                        </ul>
+                </li>
+    
+                <!-- Audit Management -->
+                <li [ngClass]="{'active-dropdown': activeDropdown === 'Audit'}">
+                    <a (click)="toggleDropdown('Audit')">
+                        Audit Management <span class="dropdown-icon">{{ activeDropdown === 'Audit' ? '▼' : '▶'  }}</span>
+                    </a>
+                    <ul *ngIf="activeDropdown === 'Audit'">
+                        <li><a (click)="showSection('internalaudit')">Internal Audit</a></li>
+                        <li><a (click)="showSection('externalaudit')">External Audit</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <!-- Sidebar Toggle Button -->
+        <div class="sidebar-toggle" (click)="toggleSidebarr()">☰</div>
+    </aside>
+    
+    
+    <!-- Main Content -->
+    <main>
+        <div *ngIf="showYearSelection" class="financial-year-overlay">
+            <div class="financial-year-modal">
+                <h2>Select Financial Year to Continue</h2>
+                <select [(ngModel)]="selectedFinancialYear" class="form-select">
+                  <option [ngValue]="null" disabled selected>Select Year</option>
+                  <option *ngFor="let year of financialYears" [ngValue]="year">{{ year }}</option>
+                </select>
+              
+                <button class="btn btn-primary mt-3" [disabled]="!selectedFinancialYear" (click)="saveFinancialYear()">Continue</button>
+              </div>
+          </div>
+          
+        <header class="top-navbar">
+            <p></p>
+            <button *ngIf="isMobile && activeSection !== 'statistics'" (click)="goToDashboard()">Back to Dashboard</button>
+    
+            <div class="profile-info">
+                <div class="financial-year-display" *ngIf="selectedFinancialYear">
+                    <span>📅 {{ selectedFinancialYear }}</span>
+                    <button class="btn btn-sm btn-outline-light ms-2" (click)="changeFinancialYear()">Change</button>
+                  </div>
+                  
+
+                <div class="profile" (click)="toggleProfileDropdown()">
+                    {{ loggedInUser || 'Guest' }} ▼
+                </div>
+                <div class="profile-dropdown" *ngIf="showProfileDropdown">
+                    <a (click)="logout()">Logout</a>
+                    <a *ngIf="isAdmin()" (click)="showSection('manegeUsers')">Manage Users</a> <!-- Admin-only access -->
+                </div>
+            </div>
+        </header>
+
+        
+        <section class="w-100 px-4 mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+            </div>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>{{ getSectionTitle() }}</h1>
+                <!-- <button *ngIf="activeSection !== 'statistics'" class="btn btn-outline-secondary" (click)="showSection('statistics')">
+                    <span class="material-icons">arrow_back</span> Back
+                </button> -->
+                <button *ngIf="showBackButton()" class="btn btn-outline-secondary" (click)="showSection('statistics')">
+                    <span class="material-icons">arrow_back</span> Back
+                </button>
+            </div>
+        
+            <!-- Statistics Section (Default view) -->
+            <!-- Statistics Section (Default view) -->
+            <div *ngIf="activeSection === 'statistics'" class="text-center">
+                <h2 class="fw-bold">Welcome, {{ loggedInUser || 'Guest' }}!</h2>
+                <p>Select a section below to continue.</p>
+
+                 <!-- Divider -->
+                 <hr class="section-divider">
+        
+       
+            
+            
+            
+                <!-- Divider -->
+                <hr class="section-divider">
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mt-3">
+                    <!-- Governance -->
+                    <div class="col">
+                        <div class="card shadow text-center p-3">
+                            <img src="assets/images/govern.jpg" alt="Governance" class="card-img-top">
+                            <h5 class="card-title mt-2">Governance</h5>
+                            <button class="btn btn-primary w-100" (click)="showSection('CorporateGovernance')">Corporate Governance</button>
+                            <!-- <button class="btn btn-primary w-100" (click)="showSection('CorporateGovernance')">Corporate Governance</button>
+                            <button class="btn btn-primary w-100" (click)="showSection('CorporateGovernance')">Corporate Governance</button>
+                            <button class="btn btn-primary w-100" (click)="showSection('CorporateGovernance')">Corporate Governance</button> -->
+                        </div>
+                    </div>
+                
+                    <!-- Risk Management -->
+                    <div class="col">
+                        <div class="card shadow text-center p-3">
+                            <img src="assets/images/Risk.jpg" alt="Risk Management" class="card-img-top">
+                            <h5 class="card-title mt-2">Risk Management</h5>
+                            <button class="btn btn-danger w-100 mb-2" (click)="showSection('StrategicRisk')">Strategic Risk</button>
+                            <button class="btn btn-danger w-100 mb-2" (click)="showSection('OperationalRisk')">Operational Risk</button>
+                            <button class="btn btn-danger w-100" (click)="showSection('fraudRisk')">Fraud Risk</button>
+                            <button class="btn btn-danger w-100" (click)="showSection('projectRisk')">Project Risk</button>
+                        </div>
+                    </div>
+                
+                    <!-- Compliance -->
+                    <div class="col">
+                        <div class="card shadow text-center p-3">
+                            <img src="assets/images/Compliance.jpg" alt="Compliance" class="card-img-top">
+                            <h5 class="card-title mt-2">Compliance</h5>
+                            <button class="btn btn-success w-100 mb-2" (click)="showSection('complianceRiskProfile')">Compliance Universe & Risk Profile</button>
+                            <button class="btn btn-danger w-100" (click)="showSection('complianceRiskPlan')">Compliance Risk Management Plan</button>
+                        </div>
+                    </div>
+                
+                    <!-- Audit Management -->
+                    <div class="col">
+                        <div class="card shadow text-center p-3">
+                            <img src="assets/images/Audit.jpg" alt="Audit Management" class="card-img-top">
+                            <h5 class="card-title mt-2">Audit Management</h5>
+                            <button class="btn btn-warning w-100 mb-2" (click)="showSection('internalaudit')">Internal Audit</button>
+                            <button class="btn btn-warning w-100" (click)="showSection('externalaudit')">External Audit</button>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        
+            <!-- Dynamic Content Based on Active Section -->
+            <ng-container [ngSwitch]="activeSection">
+                <app-compliance-risk-profile *ngSwitchCase="'complianceRiskProfile'" (backToStatistics)="showSection('statistics')"></app-compliance-risk-profile>
+                <app-strategic-risk *ngSwitchCase="'StrategicRisk'" (backToStatistics)="showSection('StrategicRisk')"></app-strategic-risk>
+                <app-operational-risk *ngSwitchCase="'OperationalRisk'" (backToStatistics)="showSection('statistics')"></app-operational-risk>
+                <app-internal-audit *ngSwitchCase="'internalaudit'" (backToStatistics)="showSection('statistics')"></app-internal-audit>
+                <app-external-audit *ngSwitchCase="'externalaudit'" (backToStatistics)="showSection('statistics')"></app-external-audit>
+                <app-compliance-risk-plan *ngSwitchCase="'complianceRiskPlan'" (backToStatistics)="showSection('statistics')"></app-compliance-risk-plan>
+                <app-fraud-risk *ngSwitchCase="'fraudRisk'" (backToStatistics)="showSection('statistics')"></app-fraud-risk>
+                <app-project-risk *ngSwitchCase="'projectRisk'" (backToStatistics)="showSection('statistics')"></app-project-risk>
+                <app-user-management *ngSwitchCase="'manegeUsers'" (backToStatistics)="showSection('statistics')"></app-user-management>
+           
+            </ng-container>
+        </section>
+        
+    </main>
+</div>

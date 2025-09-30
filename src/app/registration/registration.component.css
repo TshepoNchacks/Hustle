@@ -1,0 +1,115 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    height: 100vh;
+}
+
+/* Main Container */
+.main-container {
+    display: flex;
+    height: 100vh; /* Make sure it takes the full viewport height */
+}
+
+/* Form Container */
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%; /* Takes half of the screen */
+}
+
+/* Form Box */
+.form-box {
+    background: white;
+    padding: 65px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 350px;
+    margin: auto; /* Centers the form box */
+}
+
+.logo-container {
+    margin-bottom: 20px;
+    padding-left: 100px;
+}
+
+.logo-container img {
+    width: 120px;
+    height: auto;
+}
+
+/* Input Group */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 15px;
+    border-radius: 10px;
+    border: none;
+    background-color: #f2f2f2;
+    font-size: 14px;
+    outline: none;
+}
+
+/* Button Styling */
+button {
+    width: 100%;
+    padding: 15px;
+    background-color: #48a999;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+button:disabled {
+    background-color: #cccccc;
+}
+
+button:hover:not(:disabled) {
+    background-color: #3d8c85;
+}
+
+/* Text and Link Styling */
+p {
+    margin-top: 10px;
+    text-align: center;
+}
+
+p a {
+    color: #48a999;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+p a:hover {
+    text-decoration: underline;
+}
+
+/* Right Container */
+.right-container {
+    width: 50%; /* Takes the other half of the screen */
+}
+
+/* Right Section Styling */
+.right-section {
+    background-color: #2a2a30;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top-left-radius: 100%;
+}
+
+.right-section h1 {
+    color: white;
+    font-size: 3rem;
+    font-weight: bold;
+}

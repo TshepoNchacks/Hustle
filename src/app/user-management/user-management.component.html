@@ -1,0 +1,19 @@
+<h2>User Management</h2>
+
+<div class="add-user-form">
+  <input [(ngModel)]="newUser.username" placeholder="Username">
+  <input [(ngModel)]="newUser.password" placeholder="Password" type="password">
+  <select [(ngModel)]="newUser.role">
+    <option>User</option>
+    <option>SuperAdmin</option>
+  </select>
+  <button (click)="addUser()">Add User</button>
+  <div class="error" *ngIf="errorMessage">{{ errorMessage }}</div>
+</div>
+
+<ul>
+  <li *ngFor="let user of users">
+    {{ user.username }} - {{ user.role }}
+    <button (click)="deleteUser(user.username)">Delete</button>
+  </li>
+</ul>
